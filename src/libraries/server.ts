@@ -665,6 +665,11 @@ export async function proxyTs(url: string, headers: any, req, res: http.ServerRe
 
     // Proxy request and pipe to client
     try {
+        // res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Headers", "*");
+        res.setHeader("Access-Control-Allow-Methods", "*");
+
         if (forceHTTPS) {
             const proxy = https.request(options, (r) => {
                 r.headers["content-type"] = "video/mp2t";
