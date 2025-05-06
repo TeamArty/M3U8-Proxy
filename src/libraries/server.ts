@@ -17,6 +17,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import colors from "colors";
 import axios from "axios";
+import { parse as parseUrl } from 'url';
+import { request as httpRequest } from 'http';
+import { request as httpsRequest } from 'https';
 
 function withCORS(headers, request) {
     headers["access-control-allow-origin"] = "*";
@@ -314,6 +317,8 @@ function getHandler(options, proxy) {
                 }
                 const url = uri.searchParams.get("url");
                 return proxyTs(url ?? "", headers, req, res);
+            } else if (uri.pathname === "/mp4-proxy") {
+
             } else if (uri.pathname === "/") {
                 return res.end(readFileSync(join(__dirname, "../index.html")));
             } else {
@@ -565,7 +570,6 @@ export async function proxyM3U8(url: string, headers: any, res: http.ServerRespo
     }
 
     const m3u8 = req.data;
-    return m3u8;
     if (m3u8.includes("RESOLUTION=")) {
         // Deals with the master m3u8 and replaces all sub-m3u8 files (quality m3u8 files basically) to use the m3u8 proxy.
         // So if there is 360p, 480p, etc. Instead, the URL's of those m3u8 files will be replaced with the proxy URL.
